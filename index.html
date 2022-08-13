@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" >
+	<head>
+		<meta charset="utf-8" />
+		<meta name="keywords" content="PSO2, casino, arkuma, slots">
+		<meta name="description" content="">
+		<meta name="author" content="Clayton Craig">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>PSO2 Arkuma Slots Helper</title>
+		<link href="style.css" rel="stylesheet" type="text/css" />
+		<script src="script.js"></script>
+	</head>
+	<body>
+	<div id="container" class="container">
+		<header>
+			<h1>PSO2 Arkuma Slots Helper</h1>
+		</header>
+		<p>Expected Casino Coins: <span id="avg">-</span><p>
+		<p>Casino Coins: <span id="cc">0</span><p>
+		<p>Stage: <span id="stage">1</span><p>
+		<p>Cards: <span id="cards"></span><p>
+		<p>Sets <span id="sets">0</span><p>
+		<input type="button" value="Reset" onclick="game.reset();" />
+		<br>
+		<br>
+		<input type="button" value="Blue" onclick="game.spun('b');" />
+		<input type="button" value="Pink" onclick="game.spun('p');" />
+		<input type="button" value="Yellow" onclick="game.spun('y');" />
+		<br>
+		<br>
+		<input type="button" value="4 Bosses" onclick="game.spun('d4');" />
+		<input type="button" value="3 Bosses" onclick="game.spun('d3');" />
+		<input type="button" value="2 Bosses" onclick="game.spun('d2');" />
+		<br>
+		<br>
+		<input type="button" value="0%" onclick="game.spun(0);" />
+		<input type="button" value="120%" onclick="game.spun(120);" />
+		<input type="button" value="130%" onclick="game.spun(130);" />
+		<input type="button" value="140%" onclick="game.spun(140);" />
+		<input type="button" value="150%" onclick="game.spun(150);" />
+		<input type="button" value="180%" onclick="game.spun(180);" />
+	</body>
+</html>
