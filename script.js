@@ -200,6 +200,6 @@ window.addEventListener('load', () => {
 		while (!game2.terminal) {game2.spin()}
 		avg += game2.cc;
 	}
-	avg /= this.constructor.iterations;
+	avg /= game.constructor.iterations;
 	game.display(avg);
 });
