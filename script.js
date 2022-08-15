@@ -146,6 +146,8 @@ class Arkuma {
 			avg /= this.constructor.iterations;
 			document.getElementById('avg').innerText = avg;
 			return avg;
+		} else if (roll == 'm') {
+			// Do nothing.
 		} else {
 			this.cc *= roll/100;
 		}
