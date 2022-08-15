@@ -193,3 +193,12 @@ class Arkuma {
 }
 
 let game = new Arkuma();
+window.addEventListener('onload', () => {
+	let avg = 0;
+	for (let i = 0; i < game.constructor.iterations; i++) {
+		let game2 = game.copy();
+		while (!game2.terminal) {game2.spin()}
+		avg += game2.cc;
+	}
+	game.display(avg);
+});
