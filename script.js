@@ -193,7 +193,7 @@ class Arkuma {
 }
 
 let game = new Arkuma();
-window.addEventListener('onload', () => {
+window.addEventListener('load', () => {
 	let avg = 0;
 	for (let i = 0; i < game.constructor.iterations; i++) {
 		let game2 = game.copy();
