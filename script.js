@@ -1,157 +1,187 @@
 class Arkuma {
-	constructor(stage = 1, b = false, p = false, y = false, sets = 0, cc = 0) {
+	constructor(stage = 1, cards = [false, false, false], sets = 0, cc = 0, boss = 0) {
 		this.stage = stage;
-		this.b = b;
-		this.p = p;
-		this.y = y;
+		this.cards = [cards[0], cards[1], cards[2]];
 		this.sets = sets;
 		this.cc = cc;
 		this.terminal = false;
+		this.boss = 0;
+	}
+	
+	saveData = [
+		null,
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0]
+	]
+	
+	copy() {
+		return new this.constructor(this.stage, this.cards, this.sets, this.cc, this.boss);
+	}
+	
+	display() {
+		document.getElementById('avg').innerText = this.expectedcc;
+		document.getElementById('cc').innerText = this.cc;
+		document.getElementById('stage').innerText = this.stage;
+		document.getElementById('cards').innerText = (this.cards[0] ? 'B ' : '_ ') + (this.cards[1] ? 'P ' : '_ ') + (this.cards[2] ? 'Y' : '_');
+		document.getElementById('sets').innerText = this.sets;
+		document.getElementById('boss').innerText = this.boss ? this.boss : false;
+		
+		if (this.boss) {
+			for (const mult of document.getElementById('bMult').children) {
+				if (this.constructor.bMult[this.boss].includes(mult.value.slice(0,-1)/100)) {
+					mult.disabled = false;
+				} else {
+					mult.disabled = true;
+				}
+			}
+		} else {
+			for (const mult of document.getElementById('bMult').children) {
+				mult.disabled = true;
+			}
+		}
 	}
 	
 	reset() {
 		this.stage = 1;
-		this.b = false;
-		this.p = false;
-		this.y = false;
+		this.cards = [false, false, false];
 		this.sets = 0;
 		this.cc = 0;
 		this.terminal = false;
-		this.display('-');
+		this.boss = false;
+	}
+	
+	get expectedcc() {
+		if (this.terminal) return this.cc;
+		let avg = 0;
+		for (let i = 0; i < this.constructor.maxIterations; i++) {
+			let copy = this.copy();
+			while (!copy.terminal) {
+				copy.spun(copy.spin());
+			}
+			avg += copy.cc;
+		}
+		return Math.round(avg/this.constructor.maxIterations);
 	}
 	
 	spin() {
-		if ((this.cc == 0 && this.stage != 1) || this.stage > 30) {this.terminal = true; return this.cc}
-		let cutoffs = [0,100,0];
-		switch (Math.floor((this.stage-1)/5)) {
-			case 0:
-				cutoffs = [0,36,69];
-				break;
-			case 1:
-				cutoffs = [16,43,73];
-				break;
-			case 2:
-				cutoffs = [23,55,89];
-				break;
-			case 3:
-				cutoffs = [29,57,92];
-				break;
-			case 4:
-				cutoffs = [38,64,90];
-				break;
-			case 5:
-				cutoffs = [46,64,91];
-				break;
-		}
-		let roll = Math.random()*100;
-		if (roll < cutoffs[0]) {this.boss()}
-		else if (roll < cutoffs[1]) {this.b = true; this.cc += 10}
-		else if (roll < cutoffs[2]) {this.p = true; this.cc += 30}
-		else {this.y = true; this.cc += 50}
-		if (this.b && this.p && this.y) {
-			switch (this.sets) {
-				case 0:
-					this.cc += 100;
-					this.sets = 1;
-					break;
-				case 1:
-					this.cc += 300;
-					this.sets = 2;
-					break;
-				default:
-					this.cc += 500;
-					break;
-			}
-			this.b = false;
-			this.p = false;
-			this.y = false;
-		}
-		this.stage++;
-		return this.cc;
-	}
-	
-	boss(num) {
-		if (num) {
-			let roll2 = Math.random()*100;
-			if (num == 4) {
-				if (roll2 < 25) {this.cc *= 0}
-				else if (roll2 < 50) {this.cc *= 1.2}
-				else if (roll2 < 75) {this.cc *= 1.3}
-				else {this.cc *= 1.4}
-			} else if (num == 3) {
-				if (roll2 < 1/3*100) {this.cc *= 0}
-				if (roll2 < 2/3*100) {this.cc *= 1.3}
-				else {this.cc *= 1.5}
+		if ((this.cc == 0 && this.stage != 1) || this.stage > 30) {
+			// We've gone to far.
+			this.terminal = true;
+			return -1;
+		} else if (this.stage == 30) {
+			// Final Bonus
+			return 0;
+		} else if (this.boss) {
+			let mult = this.constructor.bMult[this.boss][Math.floor(Math.random() * this.boss)];
+			this.cc *= mult;
+			if (this.cc == 0) {
+				this.terminal = true;
+				return -1;
 			} else {
-				if (roll2 < 50) {this.cc *= 0}
-				else {this.cc *= 1.8}
+				this.cc = Math.round(this.cc);
+				this.stage++;
+				return -1;
 			}
-			return;
-		}
-		let cutoffs = [0,100];
-		switch (Math.floor((this.stage-1)/5)) {
-			case 0:
-				return;
-				break;
-			case 1:
-				cutoffs = [79,100];
-				break;
-			case 2:
-				cutoffs = [38,89];
-				break;
-			case 3:
-				cutoffs = [10,74];
-				break;
-			case 4:
-				cutoffs = [0,31];
-				break;
-			case 5:
-				cutoffs = [0,0];
-				break;
-		}
-		let roll = Math.random()*100;
-		let roll2 = Math.random()*100;
-		if (roll < cutoffs[0]) {
-			if (roll2 < 25) {this.cc *= 0}
-			else if (roll2 < 50) {this.cc *= 1.2}
-			else if (roll2 < 75) {this.cc *= 1.3}
-			else {this.cc *= 1.4}
-		} else if (roll < cutoffs[1]) {
-			if (roll2 < 1/3*100) {this.cc *= 0}
-			if (roll2 < 2/3*100) {this.cc *= 1.3}
-			else {this.cc *= 1.5}
 		} else {
-			if (roll2 < 50) {this.cc *= 0}
-			else {this.cc *= 1.8}
+			let roll = Math.random();
+			for (let i = 1; i < 8; i++) {
+				if (roll < this.constructor.pc[this.stage][i]) return i;
+			}
 		}
 	}
 	
-	copy() {
-		return new this.constructor(this.stage, this.b, this.p, this.y, this.sets, this.cc);
+	spin4boss() {
+		while (!this.boss && !this.terminal) {
+			game.spun(game.spin());
+		}
 	}
 	
-	spun(roll) {
-		if (roll == 'b') {this.b = true; this.cc += 10}
-		else if (roll == 'p') {this.p = true; this.cc += 30}
-		else if (roll == 'y') {this.y = true; this.cc += 50}
-		else if (roll == 'd2' || roll == 'd3' || roll == 'd4') {
-			let avg = 0;
-			for (let i = 0; i < this.constructor.iterations; i++) {
-				let game = this.copy();
-				game.boss(roll.slice(1));
-				game.stage++;
-				while (!game.terminal) {game.spin()}
-				avg += game.cc;
-			}
-			avg /= this.constructor.iterations;
-			document.getElementById('avg').innerText = avg;
-			return avg;
-		} else if (roll == 'm') {
-			this.display(avg);
+	bSpun(mult) {
+		if (mult) {
+			this.cc *= mult;
+			this.cc = Math.round(this.cc);
+			this.boss = 0;
+			this.spun(1);
 		} else {
-			this.cc *= roll/100;
+			this.cc = 0;
+			this.terminal = true;
+			return true;
 		}
-		if (this.b && this.p && this.y) {
+	}
+	
+	spun(card) {
+		switch (card) {
+			case 0: // Final Bonus
+				this.saveData[this.stage][0]++;
+				this.terminal = true;
+				this.cc *= 2; // I don't have enough information on how this works.
+				this.stage++;
+				break;
+			case 1: // Unmatched cards or completed boss.
+				this.saveData[this.stage][1]++;
+				this.stage++;
+				break;
+			case 2: // Two bosses
+				this.saveData[this.stage][2]++;
+				this.boss = 2;
+				break;
+			case 3: // Three bosses
+				this.saveData[this.stage][3]++;
+				this.boss = 3;
+				break;
+			case 4: // Four bosses
+				this.saveData[this.stage][4]++;
+				this.boss = 4;
+				break;
+			case 5: // Blue card
+				this.saveData[this.stage][5]++;
+				this.cards[0] = true;
+				this.cc += 10;
+				this.stage++;
+				break;
+			case 6: // Pink card
+				this.saveData[this.stage][6]++;
+				this.cards[1] = true;
+				this.cc += 30;
+				this.stage++;
+				break;
+			case 7: // Yellow card
+				this.saveData[this.stage][7]++;
+				this.cards[2] = true;
+				this.cc += 50;
+				this.stage++;
+				break;
+		}
+		
+		if (card > 4 && this.cards[0] && this.cards[1] && this.cards[2]) {
 			switch (this.sets) {
 				case 0:
 					this.cc += 100;
@@ -165,31 +195,99 @@ class Arkuma {
 					this.cc += 500;
 					break;
 			}
-			this.b = false;
-			this.p = false;
-			this.y = false;
+			this.cards = [false, false, false];
 		}
-		this.stage++;
-		let avg = 0;
-		for (let i = 0; i < this.constructor.iterations; i++) {
-			let game = this.copy();
-			while (!game.terminal) {game.spin()}
-			avg += game.cc;
-		}
-		avg /= this.constructor.iterations;
-		this.display(avg);
-		return avg;
+		
+		return this.terminal;
 	}
 	
-	display(avg) {
-		document.getElementById('avg').innerText = avg;
-		document.getElementById('cc').innerText = this.cc;
-		document.getElementById('stage').innerText = this.stage;
-		document.getElementById('cards').innerText = (this.b ? 'b' : '') + (this.p ? 'p' : '') + (this.y ? 'y' : '');
-		document.getElementById('sets').innerText = this.sets;
-	}
+	// p[i][j] contains the probability of pulling j card on the ith stage.
+	static p = [
+		null,
+		[0,0,0,0,0,0.3605,0.3325,0.307],
+		[0,0,0,0,0,0.3605,0.3325,0.307],
+		[0,0,0,0,0,0.3605,0.3325,0.307],
+		[0,0,0,0,0,0.3605,0.3325,0.307],
+		[0,0,0,0,0,0.3605,0.3325,0.307],
+		[0,0,0,0.033033,0.124267,0.272,0.304,0.2667],
+		[0,0,0,0.033033,0.124267,0.272,0.304,0.2667],
+		[0,0,0,0.033033,0.124267,0.272,0.304,0.2667],
+		[0,0,0,0.033033,0.124267,0.272,0.304,0.2667],
+		[0,0,0,0.033033,0.124267,0.272,0.304,0.2667],
+		[0,0,0.025223,0.116943,0.087134,0.3153,0.3439,0.1115],
+		[0,0,0.025223,0.116943,0.087134,0.3153,0.3439,0.1115],
+		[0,0,0.025223,0.116943,0.087134,0.3153,0.3439,0.1115],
+		[0,0,0.025223,0.116943,0.087134,0.3153,0.3439,0.1115],
+		[0,0,0.025223,0.116943,0.087134,0.3153,0.3439,0.1115],
+		[0,0,0.075088,0.184832,0.02888,0.2778,0.3556,0.0778],
+		[0,0,0.075088,0.184832,0.02888,0.2778,0.3556,0.0778],
+		[0,0,0.075088,0.184832,0.02888,0.2778,0.3556,0.0778],
+		[0,0,0.075088,0.184832,0.02888,0.2778,0.3556,0.0778],
+		[0,0,0.075088,0.184832,0.02888,0.2778,0.3556,0.0778],
+		[0,0,0.26013,0.11687,0,0.2623,0.2623,0.0984],
+		[0,0,0.26013,0.11687,0,0.2623,0.2623,0.0984],
+		[0,0,0.26013,0.11687,0,0.2623,0.2623,0.0984],
+		[0,0,0.26013,0.11687,0,0.2623,0.2623,0.0984],
+		[0,0,0.26013,0.11687,0,0.2623,0.2623,0.0984],
+		[0,0,0.454545454545455,0,0,0.181818181818182,0.272727272727273,0.0909090909090909],
+		[0,0,0.454545454545455,0,0,0.181818181818182,0.272727272727273,0.0909090909090909],
+		[0,0,0.454545454545455,0,0,0.181818181818182,0.272727272727273,0.0909090909090909],
+		[0,0,0.454545454545455,0,0,0.181818181818182,0.272727272727273,0.0909090909090909],
+		[1,0,0,0,0,0,0,0]
+	];
 	
-	static iterations = 100000;
+	static pc = [
+		null,
+		[0,0,0,0,0,0.3605,0.6930000000000001,1],
+		[0,0,0,0,0,0.3605,0.6930000000000001,1],
+		[0,0,0,0,0,0.3605,0.6930000000000001,1],
+		[0,0,0,0,0,0.3605,0.6930000000000001,1],
+		[0,0,0,0,0,0.3605,0.6930000000000001,1],
+		[0,0,0,0.033033,0.1573,0.4293,0.7333000000000001,1],
+		[0,0,0,0.033033,0.1573,0.4293,0.7333000000000001,1],
+		[0,0,0,0.033033,0.1573,0.4293,0.7333000000000001,1],
+		[0,0,0,0.033033,0.1573,0.4293,0.7333000000000001,1],
+		[0,0,0,0.033033,0.1573,0.4293,0.7333000000000001,1],
+		[0,0,0.025223,0.14216600000000001,0.2293,0.5446,0.8885,1],
+		[0,0,0.025223,0.14216600000000001,0.2293,0.5446,0.8885,1],
+		[0,0,0.025223,0.14216600000000001,0.2293,0.5446,0.8885,1],
+		[0,0,0.025223,0.14216600000000001,0.2293,0.5446,0.8885,1],
+		[0,0,0.025223,0.14216600000000001,0.2293,0.5446,0.8885,1],
+		[0,0,0.075088,0.25992,0.2888,0.5666,0.9222,1],
+		[0,0,0.075088,0.25992,0.2888,0.5666,0.9222,1],
+		[0,0,0.075088,0.25992,0.2888,0.5666,0.9222,1],
+		[0,0,0.075088,0.25992,0.2888,0.5666,0.9222,1],
+		[0,0,0.075088,0.25992,0.2888,0.5666,0.9222,1],
+		[0,0,0.26013,0.377,0.377,0.6393,0.9016,1],
+		[0,0,0.26013,0.377,0.377,0.6393,0.9016,1],
+		[0,0,0.26013,0.377,0.377,0.6393,0.9016,1],
+		[0,0,0.26013,0.377,0.377,0.6393,0.9016,1],
+		[0,0,0.26013,0.377,0.377,0.6393,0.9016,1],
+		[0,0,0.454545454545455,0.454545454545455,0.454545454545455,0.6363636363636369,0.9090909090909098,1.0000000000000007],
+		[0,0,0.454545454545455,0.454545454545455,0.454545454545455,0.6363636363636369,0.9090909090909098,1.0000000000000007],
+		[0,0,0.454545454545455,0.454545454545455,0.454545454545455,0.6363636363636369,0.9090909090909098,1.0000000000000007],
+		[0,0,0.454545454545455,0.454545454545455,0.454545454545455,0.6363636363636369,0.9090909090909098,1.0000000000000007],
+		[1,1,1,1,1,1,1,1]
+	];
+	
+	static bMult = [
+		null,
+		null,
+		[0,1.8],
+		[0,1.3,1.5],
+		[0,1.2,1.3,1.4]
+	]
+	
+	static maxIterations = 40000;
 }
 
 let game = new Arkuma();
+window.onload = () => {
+	game.display();
+	if (localStorage.hasOwnProperty('saveData')) {
+		game.saveData = JSON.parse(localStorage.getItem('saveData'));
+	}
+	setInterval(() => {
+		localStorage.setItem('saveData', JSON.stringify(game.saveData));
+	}, 60000);
+}
