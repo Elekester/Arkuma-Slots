@@ -112,7 +112,7 @@ class Arkuma {
 		let avg = 0;
 		for (let i = 0; i < n; i++) {
 			let copy = this.copy();
-			while (!copy.terminal && (i > 30 && (copy.cc < (avg/(i+1) || Infinity)) || !copy.boss)) {
+			while (!copy.terminal && ((i > 30 && (copy.cc < (avg/(i+1) || Infinity))) || !copy.boss || this.stage == copy.stage)) {
 				copy.spun(copy.spin());
 			}
 			avg += copy.cc;
