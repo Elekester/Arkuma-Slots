@@ -8,39 +8,41 @@ class Arkuma {
 		this.boss = 0;
 	}
 	
-	saveData = [
-		null,
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0]
-	]
+	saveData = {
+		statistics: [
+			null,
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0], 
+			[0, 0, 0, 0, 0, 0, 0, 0]
+		]
+	}
 	
 	copy() {
 		return new this.constructor(this.stage, this.cards, this.sets, this.cc, this.boss);
@@ -140,41 +142,41 @@ class Arkuma {
 	spun(card) {
 		switch (card) {
 			case 0: // Final Bonus
-				this.saveData[this.stage][0]++;
+				this.saveData.statistics[this.stage][0]++;
 				this.terminal = true;
 				this.cc *= 2; // I don't have enough information on how this works.
 				this.stage++;
 				break;
 			case 1: // Unmatched cards or completed boss.
-				this.saveData[this.stage][1]++;
+				this.saveData.statistics[this.stage][1]++;
 				this.stage++;
 				break;
 			case 2: // Two bosses
-				this.saveData[this.stage][2]++;
+				this.saveData.statistics[this.stage][2]++;
 				this.boss = 2;
 				break;
 			case 3: // Three bosses
-				this.saveData[this.stage][3]++;
+				this.saveData.statistics[this.stage][3]++;
 				this.boss = 3;
 				break;
 			case 4: // Four bosses
-				this.saveData[this.stage][4]++;
+				this.saveData.statistics[this.stage][4]++;
 				this.boss = 4;
 				break;
 			case 5: // Blue card
-				this.saveData[this.stage][5]++;
+				this.saveData.statistics[this.stage][5]++;
 				this.cards[0] = true;
 				this.cc += 10;
 				this.stage++;
 				break;
 			case 6: // Pink card
-				this.saveData[this.stage][6]++;
+				this.saveData.statistics[this.stage][6]++;
 				this.cards[1] = true;
 				this.cc += 30;
 				this.stage++;
 				break;
 			case 7: // Yellow card
-				this.saveData[this.stage][7]++;
+				this.saveData.statistics[this.stage][7]++;
 				this.cards[2] = true;
 				this.cc += 50;
 				this.stage++;
@@ -284,8 +286,11 @@ class Arkuma {
 let game = new Arkuma();
 window.onload = () => {
 	game.display();
-	if (localStorage.hasOwnProperty('saveData')) {
+	if (localStorage.getItem('saveData') && localStorage.getItem('buildNumber') >= 1) {
 		game.saveData = JSON.parse(localStorage.getItem('saveData'));
+	} else {
+		localStorage.setItem('saveData', JSON.stringify(game.saveData));
+		localStorage.setItem('buildNumber', 1);
 	}
 	setInterval(() => {
 		localStorage.setItem('saveData', JSON.stringify(game.saveData));
