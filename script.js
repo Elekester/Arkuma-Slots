@@ -80,17 +80,17 @@ class Arkuma {
 		this.boss = false;
 	}
 	
-	get expectedcc() {
+	get expectedcc(n = 40000) {
 		if (this.terminal) return this.cc;
 		let avg = 0;
-		for (let i = 0; i < this.constructor.maxIterations; i++) {
+		for (let i = 0; i < n; i++) {
 			let copy = this.copy();
 			while (!copy.terminal) {
 				copy.spun(copy.spin());
 			}
 			avg += copy.cc;
 		}
-		return Math.round(avg/this.constructor.maxIterations);
+		return Math.round(avg/n);
 	}
 	
 	spin() {
@@ -279,8 +279,6 @@ class Arkuma {
 		[0,1.3,1.5],
 		[0,1.2,1.3,1.4]
 	]
-	
-	static maxIterations = 40000;
 }
 
 let game = new Arkuma();
