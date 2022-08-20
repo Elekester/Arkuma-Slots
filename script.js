@@ -282,6 +282,7 @@ class Arkuma {
 }
 
 let game = new Arkuma();
+<<<<<<< HEAD
 window.onload = () => {
 	game.display();
 	if (localStorage.hasOwnProperty('saveData')) {
@@ -291,3 +292,15 @@ window.onload = () => {
 		localStorage.setItem('saveData', JSON.stringify(game.saveData));
 	}, 60000);
 }
+=======
+window.addEventListener('load', () => {
+	let avg = 0;
+	for (let i = 0; i < game.constructor.iterations; i++) {
+		let game2 = game.copy();
+		while (!game2.terminal) {game2.spin()}
+		avg += game2.cc;
+	}
+	avg /= game.constructor.iterations;
+	game.display(avg);
+});
+>>>>>>> e08603e954f4c25b3152352dbbee06c12fddf574
