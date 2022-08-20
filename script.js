@@ -44,29 +44,56 @@ class Arkuma {
 		]
 	}
 	
+	resetSaveData() {
+		localStorage.removeItem('saveData');
+		document.location.reload();
+	}
+	
 	copy() {
 		return new this.constructor(this.stage, this.cards, this.sets, this.cc, this.boss);
 	}
 	
 	display() {
-		document.getElementById('avg').innerText = this.expectedcc;
-		document.getElementById('cc').innerText = this.cc;
+		document.getElementById('avg').innerText = this.expectedcc() + ' cc';
+		document.getElementById('cc').innerText = this.cc + ' cc';
 		document.getElementById('stage').innerText = this.stage;
 		document.getElementById('cards').innerText = (this.cards[0] ? 'B ' : '_ ') + (this.cards[1] ? 'P ' : '_ ') + (this.cards[2] ? 'Y' : '_');
-		document.getElementById('sets').innerText = this.sets;
+		document.getElementById('sets').innerText = '+ ' + ((this.sets == 0) ? 100 : (this.sets == 1) ? 300 : 500) + ' cc';
 		document.getElementById('boss').innerText = this.boss ? this.boss : false;
 		
-		if (this.boss) {
-			for (const mult of document.getElementById('bMult').children) {
-				if (this.constructor.bMult[this.boss].includes(mult.value.slice(0,-1)/100)) {
-					mult.disabled = false;
+		if (this.terminal) {
+			for (const input of document.getElementsByClassName('card')) {
+				input.disabled = true;
+			}
+			for (const input of document.getElementsByClassName('bMult')) {
+				input.disabled = true;
+			}
+			for (const input of document.getElementsByClassName('spinner')) {
+				input.disabled = true;
+			}
+		} else if (this.boss) {
+			for (const input of document.getElementsByClassName('card')) {
+				input.disabled = true;
+			}
+			for (const input of document.getElementsByClassName('bMult')) {
+				if (this.constructor.bMult[this.boss].includes(input.value.slice(0,-1)/100)) {
+					input.disabled = false;
 				} else {
-					mult.disabled = true;
+					input.disabled = true;
 				}
 			}
+			for (const input of document.getElementsByClassName('spinner')) {
+				input.disabled = false;
+			}
 		} else {
-			for (const mult of document.getElementById('bMult').children) {
-				mult.disabled = true;
+			for (const input of document.getElementsByClassName('card')) {
+				input.disabled = false;
+			}
+			for (const input of document.getElementsByClassName('bMult')) {
+				input.disabled = true;
+			}
+			for (const input of document.getElementsByClassName('spinner')) {
+				input.disabled = false;
 			}
 		}
 	}
@@ -80,12 +107,12 @@ class Arkuma {
 		this.boss = false;
 	}
 	
-	get expectedcc(n = 40000) {
+	expectedcc(n = 40000) {
 		if (this.terminal) return this.cc;
 		let avg = 0;
 		for (let i = 0; i < n; i++) {
 			let copy = this.copy();
-			while (!copy.terminal) {
+			while (!copy.terminal && (i > 30 && (copy.cc < (avg/(i+1) || Infinity)) || !copy.boss)) {
 				copy.spun(copy.spin());
 			}
 			avg += copy.cc;
@@ -109,6 +136,7 @@ class Arkuma {
 				return -1;
 			} else {
 				this.cc = Math.round(this.cc);
+				this.boss = 0;
 				this.stage++;
 				return -1;
 			}
@@ -288,7 +316,7 @@ window.onload = () => {
 		game.saveData = JSON.parse(localStorage.getItem('saveData'));
 	} else {
 		localStorage.setItem('saveData', JSON.stringify(game.saveData));
-		localStorage.setItem('buildNumber', 1);
+		localStorage.setItem('buildNumber', 2);
 	}
 	setInterval(() => {
 		localStorage.setItem('saveData', JSON.stringify(game.saveData));

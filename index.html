@@ -19,29 +19,29 @@
 		<p>Casino Coins: <span id="cc">0</span><p>
 		<p>Stage: <span id="stage">1</span><p>
 		<p>Cards: <span id="cards">_ _ _</span>
-			<input type="button" value="Blue" onclick="game.spun(5); game.display();" />
-			<input type="button" value="Pink" onclick="game.spun(6); game.display();" />
-			<input type="button" value="Yellow" onclick="game.spun(7); game.display();" />
-			<input type="button" value="Miss" onclick="game.spun(1); game.display();" />
+			<input class="card" type="button" value="Blue" onclick="game.spun(5); game.display();" />
+			<input class="card"  type="button" value="Pink" onclick="game.spun(6); game.display();" />
+			<input class="card"  type="button" value="Yellow" onclick="game.spun(7); game.display();" />
+			<input class="card"  type="button" value="Miss" onclick="game.spun(1); game.display();" />
 		<p>
-		<p>Sets: <span id="sets">0</span><p>
+		<p>Completion Bonus: <span id="sets">0</span><p>
 		<p>Boss: <span id="boss">false</span>
-			<input type="button" value="4 Bosses" onclick="game.spun(4); game.display();" />
-			<input type="button" value="3 Bosses" onclick="game.spun(3); game.display();" />
-			<input type="button" value="2 Bosses" onclick="game.spun(2); game.display();" />
+			<input class="card"  type="button" value="4 Bosses" onclick="game.spun(4); game.display();" />
+			<input class="card"  type="button" value="3 Bosses" onclick="game.spun(3); game.display();" />
+			<input class="card"  type="button" value="2 Bosses" onclick="game.spun(2); game.display();" />
 		<p>
 		<p id="bMult"> Boss Multiplier:
-			<input type="button" value="0%" onclick="game.bSpun(0); game.display();" />
-			<input type="button" value="120%" onclick="game.bSpun(1.2); game.display();" />
-			<input type="button" value="130%" onclick="game.bSpun(1.3); game.display();" />
-			<input type="button" value="140%" onclick="game.bSpun(1.4); game.display();" />
-			<input type="button" value="150%" onclick="game.bSpun(1.5); game.display();" />
-			<input type="button" value="180%" onclick="game.bSpun(1.8); game.display();" />
+			<input class="bMult" type="button" value="0%" onclick="game.bSpun(0); game.display();" />
+			<input class="bMult" type="button" value="120%" onclick="game.bSpun(1.2); game.display();" />
+			<input class="bMult" type="button" value="130%" onclick="game.bSpun(1.3); game.display();" />
+			<input class="bMult" type="button" value="140%" onclick="game.bSpun(1.4); game.display();" />
+			<input class="bMult" type="button" value="150%" onclick="game.bSpun(1.5); game.display();" />
+			<input class="bMult" type="button" value="180%" onclick="game.bSpun(1.8); game.display();" />
 		</p>
 		<p>
 			<input type="button" value="Reset" onclick="game.reset(); game.display();" />
-			<input type="button" value="Spin" onclick="game.spun(game.spin()); game.display();" />
-			<input type="button" value="Spin until boss" onclick="game.spin4boss(); game.display();" />
+			<input class="spinner" type="button" value="Spin" onclick="game.spun(game.spin()); game.display();" />
+			<input class="spinner" type="button" value="Spin until boss" onclick="game.spin4boss(); game.display();" />
 		</p>
 	</body>
 </html>
