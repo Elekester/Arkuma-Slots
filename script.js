@@ -9,6 +9,7 @@ class Arkuma {
 	}
 	
 	saveData = {
+		id: '1000000000000000',
 		statistics: [
 			null,
 			[0, 0, 0, 0, 0, 0, 0, 0], 
@@ -41,7 +42,9 @@ class Arkuma {
 			[0, 0, 0, 0, 0, 0, 0, 0], 
 			[0, 0, 0, 0, 0, 0, 0, 0], 
 			[0, 0, 0, 0, 0, 0, 0, 0]
-		]
+		],
+		timestamp: '1970-01-01T00:00:00.000Z',
+		version: '4'
 	}
 	
 	resetSaveData() {
@@ -71,6 +74,7 @@ class Arkuma {
 			for (const input of document.getElementsByClassName('spinner')) {
 				input.disabled = true;
 			}
+			document.getElementsByClassName('final')[0].disabled = true;
 		} else if (this.boss) {
 			for (const input of document.getElementsByClassName('card')) {
 				input.disabled = true;
@@ -85,6 +89,18 @@ class Arkuma {
 			for (const input of document.getElementsByClassName('spinner')) {
 				input.disabled = false;
 			}
+			document.getElementsByClassName('final')[0].disabled = true;
+		} else if (this.stage == 30) {
+			for (const input of document.getElementsByClassName('card')) {
+				input.disabled = true;
+			}
+			for (const input of document.getElementsByClassName('bMult')) {
+				input.disabled = true;
+			}
+			for (const input of document.getElementsByClassName('spinner')) {
+				input.disabled = false;
+			}
+			document.getElementsByClassName('final')[0].disabled = false;
 		} else {
 			for (const input of document.getElementsByClassName('card')) {
 				input.disabled = false;
@@ -95,6 +111,7 @@ class Arkuma {
 			for (const input of document.getElementsByClassName('spinner')) {
 				input.disabled = false;
 			}
+			document.getElementsByClassName('final')[0].disabled = true;
 		}
 	}
 	
@@ -172,7 +189,7 @@ class Arkuma {
 			case 0: // Final Bonus
 				this.saveData.statistics[this.stage][0]++;
 				this.terminal = true;
-				this.cc *= 2; // I don't have enough information on how this works.
+				this.cc *= 2; // I don't have enough information on how this works. I've seen x2, x2.2
 				this.stage++;
 				break;
 			case 1: // Unmatched cards or completed boss.
@@ -310,15 +327,21 @@ class Arkuma {
 }
 
 let game = new Arkuma();
+
 window.onload = () => {
 	game.display();
-	if (localStorage.getItem('saveData') && localStorage.getItem('buildNumber') >= 1) {
-		game.saveData = JSON.parse(localStorage.getItem('saveData'));
-	} else {
-		localStorage.setItem('saveData', JSON.stringify(game.saveData));
-		localStorage.setItem('buildNumber', 2);
-	}
+	
+	let saveData = JSON.parse(localStorage.getItem('saveData')) ?? game.saveData;
+	if (saveData.version < 3) saveData = game.saveData;
+	saveData.version = game.saveData.version;
+	if (!saveData.id || saveData.id == '1000000000000000') saveData.id = Math.round(Math.random() * 1000000000000000 + 1000000000000000).toString();
+	game.saveData = saveData;
+	
+	game.saveData.timestamp = new Date().toISOString();
+	localStorage.setItem('saveData', JSON.stringify(game.saveData));
+	
 	setInterval(() => {
+		game.saveData.timestamp = new Date().toISOString();
 		localStorage.setItem('saveData', JSON.stringify(game.saveData));
 	}, 60000);
 }
