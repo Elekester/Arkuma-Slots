@@ -44,5 +44,12 @@
 			<input class="spinner" type="button" value="Spin" onclick="game.spun(game.spin()); game.display();" />
 			<input class="spinner" type="button" value="Spin until boss" onclick="game.spin4boss(); game.display();" />
 		</p>
+		<iframe name="hiddenFrame" hidden></iframe>
+		<form method="POST" action="https://script.google.com/macros/s/AKfycbxu9-AQRNFIb2zTP9XwxFLIo3gPz3xaj1BFusHYBBCQMZn9BZpMn4ZCZHE7aLTZJlMV/exec" id="statsForm" target="hiddenFrame">
+			<button type="submit">Send data to Elekester</button>
+			<input name="Timestamp" type="text" placeholder="1970-01-01T00:00:00.000Z" hidden>
+			<input name="ID" type="text" placeholder="1000000000000000" hidden>
+			<input name="Version" type="text" placeholder="0" hidden>
+		</form>
 	</body>
 </html>

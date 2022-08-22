@@ -330,18 +330,39 @@ let game = new Arkuma();
 
 window.onload = () => {
 	game.display();
+	let statsForm = document.getElementById('statsForm');
+	let headers = ['Final', 'Unmatched', '2 Bosses', '3 Bosses', '4 Bosses', 'Blue', 'Pink', 'Yellow'];
+	for (let i = 1; i < 31; i++) {
+		for (let j = 0; j < 8; j++) {
+			let input = document.createElement('input');
+			input.name = i + ', ' + headers[j];
+			input.type = 'text';
+			input.placeholder = 0;
+			input.hidden = true;
+			statsForm.appendChild(input);1
+		}
+	}
 	
+	// Load the save data from local storage and update it.
 	let saveData = JSON.parse(localStorage.getItem('saveData')) ?? game.saveData;
 	if (saveData.version < 3) saveData = game.saveData;
 	saveData.version = game.saveData.version;
 	if (!saveData.id || saveData.id == '1000000000000000') saveData.id = Math.round(Math.random() * 1000000000000000 + 1000000000000000).toString();
 	game.saveData = saveData;
 	
-	game.saveData.timestamp = new Date().toISOString();
-	localStorage.setItem('saveData', JSON.stringify(game.saveData));
-	
-	setInterval(() => {
+	// Save the updated save data to local storage and set up an interval to save it in the future.
+	function save() {
 		game.saveData.timestamp = new Date().toISOString();
 		localStorage.setItem('saveData', JSON.stringify(game.saveData));
-	}, 60000);
+		document.getElementsByName('Timestamp')[0].value = game.saveData.timestamp;
+		document.getElementsByName('ID')[0].value = game.saveData.id;
+		document.getElementsByName('Version')[0].value = game.saveData.version;
+		for (let i = 1; i < 31; i++) {
+			for (let j = 0; j < 8; j++) {
+				document.getElementsByName(i + ', ' + headers[j])[0].value = game.saveData.statistics[i][j];
+			}
+		}
+	}
+	save();
+	setInterval(save, 6000);
 }
